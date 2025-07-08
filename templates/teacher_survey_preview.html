@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}预览问卷结构 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 style="margin-bottom: 0.3em;">问卷名称：</h2>
+  <p style="font-size: 1.2em; font-weight: bold; margin-bottom: 0.5em;">{{ survey.title }}</p>
+
+  <p><strong style="color: #444;">描述：</strong> {{ survey.description }}</p>
+
+  <hr style="margin: 2em 0;">
+
+  <h3 style="margin-bottom: 1em;">题目列表</h3>
+
+  <ol style="list-style-position: inside;">
+    {% for q in survey.questions %}
+    <li style="background: #f9f9f9; border: 1px solid #ddd; padding: 1em; margin-bottom: 1em; border-radius: 6px;">
+      <p><strong>题型：</strong>
+        {% if q.type == "single" %}<span style="color: #3f51b5;">单选题</span>
+        {% elif q.type == "multiple" %}<span style="color: #3f51b5;">多选题</span>
+        {% elif q.type == "true_false" %}<span style="color: #3f51b5;">判断题</span>
+        {% elif q.type == "text" %}<span style="color: #3f51b5;">主观题</span>
+        {% else %}<span style="color: #999;">未知类型</span>
+        {% endif %}
+      </p>
+
+      <p><strong>内容：</strong> {{ q.content }}</p>
+
+      {% if q.options %}
+      <div style="margin-top: 0.5em;">
+        <p><strong>选项：</strong></p>
+        <ul style="padding-left: 1.5em;">
+          {% for opt in q.options %}
+          <li style="margin-bottom: 0.2em;">{{ opt }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</div>
+{% endblock %}

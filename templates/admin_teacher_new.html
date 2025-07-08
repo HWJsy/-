@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}添加教师账号 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>➕ 添加新教师账号</h2>
+
+  {% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+    <div class="form-group">
+      <label for="username">用户名</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">密码</label>
+      <input type="text" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">提交</button>
+    <a href="/admin/dashboard" class="btn btn-secondary mt-3">取消</a>
+  </form>
+</div>
+{% endblock %}

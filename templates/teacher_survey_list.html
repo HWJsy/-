@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}问卷管理 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 style="margin-bottom: 1em;">问卷管理</h2>
+
+    <a href="/teacher/surveys/new" class="button">+ 创建新问卷</a>
+
+    {% if surveys|length == 0 %}
+        <p style="margin-top: 2em; color: #777;">当前没有问卷。</p>
+    {% else %}
+    <ul style="list-style: none; padding: 0; margin-top: 2em;">
+        {% for survey in surveys %}
+        <li style="background: #f2f2f2; margin-bottom: 1em; padding: 1em 1.5em; border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ survey.title }}</strong><br>
+                    <small style="color: #666;">{{ survey.description }}</small>
+                </div>
+                <div>
+                    <a href="/teacher/surveys/detail/{{ survey.id }}" class="button" style="margin-right: 0.5em;">查看答卷</a>
+                    <a href="/teacher/surveys/preview/{{ survey.id }}" class="button" style="background: #999;">预览</a>
+                    <form method="post" action="/teacher/surveys/delete/{{ survey.id }}" style="display:inline;" onsubmit="return confirm('确认删除该问卷？');">
+                        <button type="submit" class="button" style="background: #e53935; margin-left: 0.5em;">删除</button>
+                    </form>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

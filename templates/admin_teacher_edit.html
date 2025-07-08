@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}编辑教师密码 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>🛠 编辑教师账号：{{ teacher.username }}</h2>
+
+  <form method="post">
+    <div class="form-group">
+      <label for="password">新密码</label>
+      <input type="text" class="form-control" id="password" name="password" value="{{ teacher.password }}" required>
+    </div>
+    <button type="submit" class="btn btn-warning mt-3">保存修改</button>
+    <a href="/admin/dashboard" class="btn btn-secondary mt-3">返回</a>
+  </form>
+</div>
+{% endblock %}

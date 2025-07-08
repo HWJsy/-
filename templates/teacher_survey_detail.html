@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}问卷答卷详情 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ survey.title }}</h2>
+    <p style="color: #666;">{{ survey.description }}</p>
+
+    <h3 style="margin-top: 2em;">📊 统计信息</h3>
+    {% for stat in statistics %}
+        <div style="margin-bottom: 1.5em;">
+            <p><strong>{{ loop.index }}. {{ stat.content }}</strong></p>
+            {% if stat.type in ['single', 'multiple', 'true_false'] %}
+                <ul style="list-style: none; padding-left: 1em;">
+                    {% for item in stat.result %}
+                        <li>{{ item.label }}：{{ item.count }} 人</li>
+                    {% endfor %}
+                </ul>
+            {% elif stat.type == 'text' %}
+                <p>共有 {{ stat.count }} 条文字答复。</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <h3 style="margin-top: 2em;">📄 所有答卷</h3>
+    {% for answer in answers %}
+        <div style="border: 1px solid #ddd; padding: 1em; margin-bottom: 1em; border-radius: 6px; background: #fafafa;">
+            <p style="font-size: 0.9em; color: #888;">🆔 用户 ID：{{ answer.user_id }}</p>
+            <ul style="list-style: none; padding-left: 1em;">
+                {% for q in survey.questions %}
+                    <li style="margin-bottom: 0.5em;">
+                        <strong>{{ loop.index }}. {{ q.content }}</strong><br>
+                        {% set val = answer.answers[q.id] %}
+                        {% if q.type == 'single' %}
+                            {{ q.options[val] if val is not none else '未作答' }}
+                        {% elif q.type == 'multiple' %}
+                            {% if val %}
+                                {% set option_texts = [] %}
+                                {% for i in val %}
+                                  {% set _ = option_texts.append(q.options[i | int]) %}
+                                {% endfor %}
+                                {{ option_texts | join(', ') }}
+                            {% else %}
+                                未作答
+                            {% endif %}
+                        {% elif q.type == 'true_false' %}
+                            {{ '是' if val else '否' }}
+                        {% elif q.type == 'text' %}
+                            {{ val or '未作答' }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

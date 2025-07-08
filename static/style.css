@@ -1,0 +1,141 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #f2f2f2;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 2em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.button, button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 0.6em 1.2em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.95em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.5em;
+}
+.button:hover, button:hover {
+  background-color: #45a049;
+}
+
+input[type="text"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+form label {
+  font-weight: bold;
+}
+
+header {
+  background-color: #34495e;
+  padding: 1em 0;
+  color: white;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-bar {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-bar h1 a {
+  color: white;
+  font-size: 1.5em;
+  text-decoration: none;
+}
+
+.nav-bar nav a {
+  color: white;
+  margin-left: 20px;
+  font-size: 1em;
+}
+
+footer {
+  text-align: center;
+  color: #aaa;
+  font-size: 0.9em;
+  margin-top: 50px;
+  padding-bottom: 1em;
+}
+
+/* 卡片样式的列表项 */
+ul.survey-list {
+  list-style: none;
+  padding: 0;
+}
+.survey-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 6px;
+}
+.survey-item strong {
+  font-size: 1.1em;
+}
+.survey-item a {
+  margin-right: 10px;
+}
+
+/* 提交后感谢提示 */
+#thanks {
+  background: #e6ffe6;
+  border: 1px solid #a6d8a8;
+  padding: 1em;
+  border-radius: 6px;
+  color: #2d702d;
+}
+
+/* 问题块 */
+.question-block {
+  padding: 1em;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  margin-bottom: 1em;
+  border-radius: 5px;
+}

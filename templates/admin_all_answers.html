@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}答卷总览 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>📋 所有问卷答卷总览</h2>
+
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>问卷标题</th>
+        <th>描述</th>
+        <th>答卷数</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in surveys %}
+      <tr>
+        <td>{{ s.title }}</td>
+        <td>{{ s.description }}</td>
+        <td>{{ s.answer_count }}</td>
+        <td>
+          <form method="get" action="/teacher/surveys/detail/{{ s.id }}" style="display:inline;">
+            <button class="btn btn-sm btn-primary">查看答卷详情</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="/admin/dashboard" class="btn btn-secondary">返回后台</a>
+</div>
+{% endblock %}

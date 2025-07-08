@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}教师登录 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 400px;">
+  <h2 style="text-align: center;">教师登录</h2>
+
+  {% if error %}
+    <div style="color: red; margin-bottom: 1em; text-align: center;">
+      {{ error }}
+    </div>
+  {% endif %}
+
+  <form method="post">
+    <label for="username">用户名：</label><br>
+    <input type="text" id="username" name="username" required style="width: 100%; padding: 8px; margin-bottom: 1em;"><br>
+
+    <label for="password">密码：</label><br>
+    <input type="password" id="password" name="password" required style="width: 100%; padding: 8px; margin-bottom: 1.5em;"><br>
+
+    <button type="submit" class="button" style="width: 100%;">登录</button>
+  </form>
+</div>
+{% endblock %}

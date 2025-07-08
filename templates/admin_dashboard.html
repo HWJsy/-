@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}超级管理员后台 - 微调查系统{% endblock %}
+
+{% block content %}
+<style>
+  .section-title {
+    font-size: 1.1rem;
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    font-weight: 600;
+  }
+  .btn-link {
+    color: #0d6efd;
+    text-decoration: none;
+    margin-right: 0.5em;
+  }
+  .btn-link:hover {
+    text-decoration: underline;
+  }
+  .table-bordered th, .table-bordered td {
+    border: 1px solid #dee2e6 !important;
+  }
+</style>
+
+<div class="container">
+  <h2 class="mb-4">管理员后台</h2>
+
+  <!-- 问卷管理 -->
+  <h5 class="section-title">问卷管理</h5>
+  {% set surveys_per_page = 5 %}
+  {% set survey_page = request.query_params.get("survey_page", "1") | int %}
+  {% set survey_total = surveys|length %}
+  {% set survey_pages = ((survey_total - 1) // surveys_per_page) + 1 %}
+  {% set surveys_to_show = surveys[(survey_page - 1) * surveys_per_page : survey_page * surveys_per_page] %}
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>问卷ID</th>
+        <th>标题</th>
+        <th>描述</th>
+        <th>创建者</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in surveys_to_show %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.title }}</td>
+        <td>{{ s.description }}</td>
+        <td>{{ s.creator }}</td>
+        <td>
+          <a href="/teacher/surveys/preview/{{ s.id }}" class="btn-link">预览</a>
+          <a href="/teacher/surveys/detail/{{ s.id }}" class="btn-link">查看答卷</a>
+          <form method="post" action="/teacher/surveys/delete/{{ s.id }}" style="display:inline;">
+            <button type="submit" class="btn-link text-danger" style="border:none;background:none;padding:0;" onclick="return confirm('确认删除该问卷？')">删除</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <nav>
+    {% if survey_pages > 1 %}
+    <nav>
+      <ul class="pagination">
+        {% for i in range(1, survey_pages + 1) %}
+          <li class="page-item {% if i == survey_page %}active{% endif %}">
+            <a class="page-link" href="?survey_page={{ i }}&teacher_page={{ request.query_params.get('teacher_page', 1) }}">{{ i }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </nav>
+
+  <!-- 教师账号管理 -->
+  <h5 class="section-title">教师账号管理</h5>
+  {% set teachers_per_page = 5 %}
+  {% set teacher_page = request.query_params.get("teacher_page", "1") | int %}
+  {% set teacher_total = teachers|length %}
+  {% set teacher_pages = ((teacher_total - 1) // teachers_per_page) + 1 %}
+  {% set teachers_to_show = teachers[(teacher_page - 1) * teachers_per_page : teacher_page * teachers_per_page] %}
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>用户名</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in teachers_to_show %}
+      <tr>
+        <td>{{ t.username }}</td>
+        <td>
+          <a href="/admin/teachers/edit/{{ t.username }}" class="btn-link">编辑</a>
+          <form method="post" action="/admin/teachers/delete/{{ t.username }}" style="display:inline;">
+            <button type="submit" class="btn-link text-danger" style="border:none;background:none;padding:0;" onclick="return confirm('确认删除该教师？')">删除</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <nav>
+    {% if teacher_pages > 1 %}
+    <nav>
+      <ul class="pagination">
+        {% for i in range(1, teacher_pages + 1) %}
+          <li class="page-item {% if i == teacher_page %}active{% endif %}">
+            <a class="page-link" href="?teacher_page={{ i }}&survey_page={{ request.query_params.get('survey_page', 1) }}">{{ i }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </nav>
+
+  <a href="/admin/teachers/new" class="btn-link text-success">添加新教师</a>
+
+  <!-- 答卷记录入口 -->
+  <h5 class="section-title">全部答卷管理</h5>
+  <p>查看所有问卷下的答卷记录（整合视图）</p>
+  <a href="/admin/answers/all" class="btn-link">查看所有答卷记录</a>
+
+  <!-- 答卷汇总 -->
+  <h5 class="section-title">答卷总览</h5>
+    <ul>
+    <li>当前系统中共收到 <strong>{{ total_answer_count }}</strong> 份答卷</li>
+    <li>答卷数量最多的问卷 Top 5：
+        <ol>
+        {% for item in top_survey_answers %}
+        <li>{{ item.title }}（{{ item.count }} 份答卷）</li>
+        {% endfor %}
+        </ol>
+    </li>
+    </ul>
+</div>
+{% endblock %}

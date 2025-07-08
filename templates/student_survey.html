@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}填写问卷 - 微调查系统{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>{{ survey.title }}</h2>
+  <p style="color: #666;">{{ survey.description }}</p>
+
+  <form id="survey-form">
+    <input type="hidden" name="user_id" value="{{ request.query_params.get('user_id', 'anonymous') }}">
+
+    {% for q in survey.questions %}
+    <div class="question-block" style="margin-bottom: 1.5em;">
+      <p><strong>{{ loop.index }}. {{ q.content }}</strong></p>
+      {% if q.type == 'single' %}
+        {% for opt in q.options %}
+          <label><input type="radio" name="{{ q.id }}" value="{{ loop.index0 }}" required> {{ opt }}</label><br>
+        {% endfor %}
+      {% elif q.type == 'multiple' %}
+        {% for opt in q.options %}
+          <label><input type="checkbox" name="{{ q.id }}" value="{{ loop.index0 }}"> {{ opt }}</label><br>
+        {% endfor %}
+      {% elif q.type == 'true_false' %}
+        <label><input type="radio" name="{{ q.id }}" value="true" required> 是</label>
+        <label><input type="radio" name="{{ q.id }}" value="false" required> 否</label>
+      {% elif q.type == 'text' %}
+        <textarea name="{{ q.id }}" rows="3" style="width: 100%;" required></textarea>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <br>
+    <button type="submit" class="button">提交答卷</button>
+  </form>
+
+  <div id="thanks" style="display: none; margin-top: 20px; color: green; font-weight: bold;">
+    感谢您的反馈！
+  </div>
+</div>
+
+<script>
+document.getElementById("survey-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  // 校验：每题必须填写
+  let valid = true;
+
+  {% for q in survey.questions %}
+  {
+    const qid = "{{ q.id }}";
+    const elems = form.querySelectorAll(`[name="${qid}"]`);
+    if (!elems.length) return;
+
+    if ("{{ q.type }}" === "multiple") {
+      const anyChecked = Array.from(elems).some(el => el.checked);
+      if (!anyChecked) valid = false;
+    } else if ("{{ q.type }}" === "text") {
+      const val = form.querySelector(`[name="${qid}"]`).value.trim();
+      if (!val) valid = false;
+    } else {
+      const checked = form.querySelector(`[name="${qid}"]:checked`);
+      if (!checked) valid = false;
+    }
+  }
+  {% endfor %}
+
+  if (!valid) {
+    alert("请完成所有题目后再提交！");
+    return;
+  }
+
+  const response = await fetch("/survey/{{ survey.id }}", {
+    method: "POST",
+    body: formData
+  });
+
+  if (response.ok) {
+    form.style.display = "none";
+    document.getElementById("thanks").style.display = "block";
+    window.parent.postMessage("survey-submitted", "*");  // 通知父页面关闭 iframe
+  } else {
+    alert("提交失败，请稍后重试。");
+  }
+});
+</script>
+{% endblock %}
